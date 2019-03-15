@@ -1,4 +1,4 @@
-package com.pinyougou.manager.controller;
+package com.pinyougou.shop.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author lhh
- * @date 2019/3/10 21:03
- * @Description: 登录相关的
- */
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -24,7 +19,7 @@ public class LoginController {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Map<String, String> map = new HashMap<String, String>();
         map.put("loginName", name);
-        logger.info("登录用户名称:{}",name);
+        logger.info("登录用户名称:{}", name);
         return map;
     }
 }
