@@ -81,11 +81,11 @@ public class OSSClientUtil {
     }
 
     public String uploadImg2Oss(MultipartFile file) {
-        filedir = "data/";
-        if (file.getSize() > 1024 * 1024 * 1024) {
+        //filedir = "data/";
+        if (file.getSize() > 1024 * 1024 * 50) {
             // throw new ImgException("上传图片大小不能超过1M！");
-            System.out.println("图片大小不能超过1M");
-            throw new RuntimeException("图片大小不能超过1M");
+            System.out.println("图片大小不能超过50M");
+            throw new RuntimeException("图片大小不能超过5M");
         }
         String originalFilename = file.getOriginalFilename();
         String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
