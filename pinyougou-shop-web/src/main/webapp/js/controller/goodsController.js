@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService, uploadService){
+app.controller('goodsController' ,function($scope,$controller   ,goodsService, uploadService,itemCatService,typeTemplateService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -98,8 +98,9 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService, u
         uploadService.uploadFile().success(
             function (response) {
                 //设置url
-                alert(response.message);
+                //alert(response.message);
                 if(response.success){
+                	console.log("图片路径:"+response.message);
                     $scope.image_entity.url=response.message;
                 }else{
                     alert(response.message);
@@ -107,5 +108,74 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService, u
             }
         );
     }
-    
+	//定义entity的数据结构
+    $scope.entity={goods:{},goodsDesc:{itemImages:[]}};
+    //将当前上传的图片实体存入图片实体
+    $scope.add_image_entity=function () {
+		$scope.entity.goodsDesc.itemImages.push($scope.image_entity);
+	}
+	//移除图片
+	$scope.remove_image_entity=function (index) {
+		$scope.entity.goodsDesc.itemImages.splice(index,1);
+	}
+	//查询一级商品分类列表
+	$scope.selectItemCat1List=function () {
+		itemCatService.findByParentId(0).success(
+			function (response) {
+				$scope.itemCat1List=response;
+			}
+		)
+	}
+	//当变量改变后触发事件,查询二级商品分类列表列表
+	$scope.$watch('entity.goods.category1Id',function (newValue,oldValue) {
+		if (newValue==undefined||newValue==''){
+			console.log("newValue为空1");
+			return;
+		}
+		itemCatService.findByParentId(newValue).success(
+			function (response) {
+				$scope.itemCat2List=response;
+			}
+		)
+	})
+	//当变量改变后触发事件,查询三级商品分类列表列表
+	$scope.$watch('entity.goods.category2Id',function (newValue,oldValue) {
+		if (newValue==undefined||newValue==''){
+			console.log("newValue为空2");
+			return;
+		}
+		itemCatService.findByParentId(newValue).success(
+			function (response) {
+				$scope.itemCat3List=response;
+			}
+		)
+	})
+	//读取模板ID
+	$scope.$watch('entity.goods.category3Id',function (newValue,oldValue) {
+		if (newValue==undefined||newValue==''){
+			console.log("newValue为空3");
+			return;
+		}
+		 itemCatService.findOne(newValue).success(
+		 	function (response) {
+		 		$scope.entity.goods.typeTemplateId=response.typeId;
+			}
+		 )
+	})
+
+	//监控模板ID
+	$scope.$watch('entity.goods.typeTemplateId',function (newValue,oldValue) {
+		if (newValue==undefined||newValue==''){
+			console.log("newValue为空4");
+			return;
+		}
+		typeTemplateService.findOne(newValue).success(
+			function (response) {
+				$scope.typeTemplate=response;//模板对象
+				console.log($scope.typeTemplate.brandIds);
+				debugger;
+				$scope.typeTemplate.brandIds=JSON.parse($scope.typeTemplate.brandIds);//品牌列表字符串转JSON对象
+			}
+		)
+	})
 });	

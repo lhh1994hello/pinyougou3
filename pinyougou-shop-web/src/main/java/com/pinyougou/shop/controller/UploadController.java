@@ -35,19 +35,15 @@ public class UploadController {
         try {
             OSSClientUtil ossClient = new OSSClientUtil();
             QiniuyunOSSUtil qiniuyunOSSUtil = new QiniuyunOSSUtil();
-            stopWatch.start("阿里云上传图片");
-            String name = ossClient.uploadImg2Oss(file, FILEDIR);
-            String imageUrl = ossClient.getImgUrl(name);
-            System.out.println("路径:" + imageUrl);
-            logger.info("图片名:{}上传图片路径:{}", name, imageUrl);
-            stopWatch.stop();
-            stopWatch.start("七牛云上传图片");
+//            stopWatch.start("阿里云上传图片");
+//            String name = ossClient.uploadImg2Oss(file, FILEDIR);
+//            String imageUrl = ossClient.getImgUrl(name);
+//            System.out.println("路径:" + imageUrl);
+//            logger.info("图片名:{}上传图片路径:{}", name, imageUrl);
             String qiniuyunURL = qiniuyunOSSUtil.saveImage(file);
             logger.info("七牛云路径,{}", qiniuyunURL);
-            stopWatch.stop();
-            stopWatch.prettyPrint();
-            stopWatch.shortSummary();
-            return new Result(true, imageUrl);
+
+            return new Result(true, qiniuyunURL);
         } catch (Exception e) {
             return new Result(false, "上传失败");
         }
